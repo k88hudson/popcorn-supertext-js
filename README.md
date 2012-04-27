@@ -37,15 +37,15 @@ The example here uses the default base and active classes, which are `supertext-
 
 ```css
 .supertext-container { 
-  -moz-transition: opacity 0.5s ease-out;
-  -webkit-transition: opacity 0.5s ease-out;
-  transition: opacity 0.5s ease-out;
+  -moz-transition: opacity 0.5s ease;
+  -webkit-transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
   opacity: 0; height: 0; overflow: hidden;
 }
 .supertext-active { 
-  -moz-transition: opacity 0.5s ease-out;
-  -webkit-transition: opacity 0.5s ease-out;
-  transition: opacity 0.5s ease-out;
+  -moz-transition: opacity 0.5s ease;
+  -webkit-transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
   opacity: 1; height: auto;
 }
 ```
@@ -65,23 +65,19 @@ When a target is *not* specified, Supertext adds your text to a subtitle contain
   color: #FFF;
 }
 ```
-
-Example with all options:
+Overwriting CSS
 -------------
-```javascript
- var p = Popcorn('#video')
-        .supertext({
-          start: 3, // seconds
-          end: 10, // seconds
-          text: 'This is my cool text',
-          defaultTransition: 400, //in milliseconds
-          baseClass: 'supertext',
-          activeClass: 'active',
-          target: 'myTarget',
-          callback: function() {
-            console.log("Supertext is playing!");
-          }
-        });
+If you wish to overwrite/modify the default styles, you should do so like this:
+```css
+#yourtarget .supertext-container { 
+ ...
+}
+#yourtarget .supertext-active { 
+  ...
+}
+#supertext-subtitles-mediaID .supertext-container { 
+  ...
+}
 ```
 
 Options
@@ -115,3 +111,22 @@ Options
     <td>callback</td><td>none</td><td>A function to be run at the end of the plugin setup.</td>
   </tr>
 </table>
+
+
+Example with all options:
+-------------
+```javascript
+ var p = Popcorn('#video')
+        .supertext({
+          start: 3, // seconds
+          end: 10, // seconds
+          text: 'This is my cool text',
+          defaultTransition: 400, //in milliseconds
+          baseClass: 'supertext',
+          activeClass: 'active',
+          target: 'myTarget',
+          callback: function() {
+            console.log("Supertext is playing!");
+          }
+        });
+```
