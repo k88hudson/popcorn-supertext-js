@@ -37,17 +37,28 @@ The example here uses the default base and active classes, which are `supertext-
 
 ```css
 .supertext-container { 
-  -moz-transition: opacity 0.5s ease;
-  -webkit-transition: opacity 0.5s ease;
-  transition: opacity 0.5s ease;
-  opacity: 0; height: 0; overflow: hidden;
+  -webkit-transition: visibility .5s .5s, opacity .5s .5s linear;
+  -moz-transition: visibility 0s .5s, opacity .5s linear;
+  transition: visibility 0s .5s, opacity .5s linear;
+  opacity: 0; visibility:hidden; overflow: hidden;
+}
+.supertext-container > div {
+  margin-top: -10000px;
+  -webkit-transition: margin-top 0s .5s;
+  -moz-transition: margin-top 0s .5s;
+  transition: margin-top .5s .5s;
 }
 .supertext-active { 
-  -moz-transition: opacity 0.5s ease;
-  -webkit-transition: opacity 0.5s ease;
-  transition: opacity 0.5s ease;
-  opacity: 1; height: auto;
+  -moz-transition: opacity .5s linear;
+  -webkit-transition: opacity .5s .5s linear;
+  transition: opacity .5s linear;
+  transition: opacity .5s linear;
+  opacity: 1; visibility:visible;
 }
+.supertext-active > div {
+  margin-top: 0;
+  -webkit-transition: none}
+
 ```
 
 The default classes use CSS3 transitions to create fade in and out effects by default. You can specify a custom transition time in milliseconds with the `defaultTransition` option.
