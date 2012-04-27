@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Popcorn supertext Plug-in Demo</title>
+  <style>
+    .supertext { 
+      text-shadow: 0 0 12px black; 
+      color: transparent;
+      font-size: 14px;
+      height: 0;
+      opacity: 0;
+      -webkit-transition: all 2s ease;
+      -moz-transition:    all 2s ease;
+      -o-transition:      all 2s ease;
+      transition:         all 2s ease; 
+    }
+    .active { 
+      text-shadow: none; 
+      color: #000;
+      font-size: 18px;
+      height: auto;
+      opacity: 1;
+      -webkit-transition: all 2s ease;
+      -moz-transition:    all 2s ease;
+      -o-transition:      all 2s ease;
+      transition:         all 2s ease; 
+    }
+  </style>
+  <script src="popcorn-js/popcorn.js"></script>
+  <script src="popcorn.supertext.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var p = Popcorn( "#video" )
+      .play()
+      .supertext({
+        start: 1, // seconds
+        end: 5, // seconds
+        defaultTransition: 200,
+        text: 'This is my cool text',
+        target: 'supertarget',
+      })
+      .supertext({
+        start: 5, // seconds
+        end: 10, // seconds
+        text: 'More text here',
+        target: 'supertarget',
+      })
+       .supertext({
+          start: 10, // seconds
+          end: 15, // seconds
+          text: 'Whoa, check it out!',
+          baseClass: 'supertext',
+          activeClass: 'active',
+          target: 'supertarget',
+          callback: function() {
+            console.log("Supertext is playing!");
+          }
+        })
+       .supertext({
+          start: 1, // seconds
+          end: 5, // seconds
+          text: 'Subtitle mania',
+        });
+
+    }, false);
+
+  </script>
+</head>
+<body>
+  <h1 id="qunit-header">Popcorn Footnote Plug-in Demo</h1>
+  <p> A container displaying 'This is my cool text will appear at 1 seconds and disappear at 5 seconds, with a 1-second transition time.</p>
+  <p> A footnote displaying 'Whoa, check it out!' will appeat at 5 seconds and disappear at 10 seconds, with a custom class/ </p>
+  <div>
+    <video id="video"
+      controls 
+      width="250px"
+      poster="popcorn-js/test/poster.png">
+
+    <source id="mp4"
+      src="popcorn-js/test/trailer.mp4"
+      type='video/mp4; codecs="avc1, mp4a"'>
+
+    <source id="ogv"
+      src="popcorn-js/test/trailer.ogv"
+      type='video/ogg; codecs="theora, vorbis"'>
+
+    <p>Your user agent does not support the HTML5 Video element.</p>
+
+    </video>
+  </div>
+  <div id="supertarget" width="50%" height="50%">
+  </div>
+</body>
+</html>
