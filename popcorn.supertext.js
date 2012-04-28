@@ -36,45 +36,37 @@
           website: "http://k88.ca"
         },
         options: {
+          text: {
+            elem: "input",
+            type: "text",
+            label: "Text"
+          },
           start: {
             elem: "input",
             type: "number",
-            label: "In"
+            label: "Start"
           },
           end: {
             elem: "input",
             type: "number",
-            label: "Out"
-          },
-          baseClass: {
-             elem: "input",
-            type: "text",
-            label: "Class"
-          },
-          activeClass: {
-            elem: "input",
-            type: "text",
-            label: "Active Class"
+            label: "End"
           },
           defaultTransition: {
             elem: "input",
             type: "number",
             label: "Default Transition Time (in milliseconds)"
           },
-          text: {
+          innerCSS: {
             elem: "input",
             type: "text",
-            label: "Text"
+            label: "Inner CSS"
           },
-          callback: {
-            elem: "input",
-            type: "text",
-            label: "Callback function"
-          },
-          target: name + "-container"
+          target: "supertext-container"
         }
       },
     _setup: function( options ) {
+
+      var transition, innerDivStyles;
 
       if( options.defaultTransition && styleSheet ) {
         styleSheet.parentNode.removeChild( styleSheet );
@@ -84,7 +76,6 @@
 
       //Create the stylesheet if it is not set
       if(! styleSheet) {
-        var transition;
         if( options.defaultTransition ) {
           transition = options.defaultTransition/1000 
         }
@@ -95,32 +86,38 @@
         styleSheet = document.createElement('style');
         styleSheet.setAttribute('type', 'text/css');
         styleSheet.appendChild(
-          document.createTextNode('.supertext-container { \n'+
-            '  -webkit-transition: visibility '+transition+'s '+transition+'s, opacity '+transition+'s '+transition+'s linear;\n'+
-            '  -moz-transition: visibility 0s '+transition+'s, opacity '+transition+'s linear;\n'+
-            '  transition: visibility 0s '+transition+'s, opacity '+transition+'s linear;\n'+
-            '  opacity: 0; visibility:hidden; overflow: hidden;\n'+
-            '}\n'+
-            '.supertext-container > div {\n'+
-            '  margin-top: -10000px;\n'+
-            '  -webkit-transition: margin-top 0s '+transition+'s;\n'+
-            '  -moz-transition: margin-top 0s '+transition+'s;\n'+
-            '  transition: margin-top '+transition+'s '+transition+'s;\n'+
+          document.createTextNode(
+            '.supertext-container {\n' +
+            '  overflow: hidden;\n' +
+            '}\n' +
+            ' .supertext-on {\n' +
+            '  visibility: visible;\n' +
+            '  opacity: 1;\n' +
+            '  /* Show */\n' +
+            '  -webkit-transition: opacity '+transition+'s linear '+transition+'s;\n' +
+            '  -moz-transition: opacity '+transition+'s linear '+transition+'s;\n' +
+            '  -o-transition: opacity '+transition+'s linear '+transition+'s;\n' +
+            '  transition: opacity '+transition+'s linear '+transition+'s;\n' +
+            '}\n' +
+            ' .supertext-off {\n' +
+            '  visibility: hidden;\n' +
+            '  opacity: 0;\n' +
+            '  /* Hide */\n' +
+            '  -webkit-transition: visibility 0s '+transition+'s, opacity '+transition+'s linear;\n' +
+            '  -moz-transition: visibility 0s '+transition+'s, opacity '+transition+'s linear;\n' +
+            '  -o-transition: visibility 0s '+transition+'s, opacity '+transition+'s linear;\n' +
+            '  transition: visibility 0s '+transition+'s, opacity '+transition+'s linear;\n' +
+            '}\n' +
+            ' .supertext-off > div {\n' +
+            '  margin-top: -10000px;\n' +
+            '  -webkit-transition: margin-top 0s '+transition+'s;\n' +
+            '  -moz-transition: margin-top 0s '+transition+'s;\n' +
+            '  -o-transition: margin-top 0s '+transition+'s;\n' +
+            '  transition: margin-top 0s '+transition+'s;\n' +
             '}\n'
         ));
-        styleSheet.appendChild(
-          document.createTextNode('.supertext-active { \n'+
-            '  -moz-transition: opacity '+transition+'s linear;\n'+
-            '  -webkit-transition: opacity '+transition+'s '+transition+'s linear;\n'+
-            '  transition: opacity '+transition+'s linear;\n'+
-            '  transition: opacity '+transition+'s linear;\n'+
-            '  opacity: 1; visibility:visible;\n'+
-            '}\n'+
-            '.supertext-active > div {\n'+
-            '  margin-top: 0;\n'+
-            '  -webkit-transition: none'+
-            '}\n'
-        ));
+
+       // var headElements = document.head.childNodes;
         document.head.appendChild(styleSheet);
       }
 
@@ -133,13 +130,19 @@
           subtitleStyleSheet.setAttribute('type', 'text/css');
           document.head.appendChild(subtitleStyleSheet);
         }
-        subtitleContainer = createDefaultContainer( this, "supertext-subtitles-" + this.media.id );
+        subtitleContainer = createDefaultContainer( this, "supertext-subtitles-" + this.media.id )
+        subtitleContainer.className = "supertext-subtitles";
         subtitleStyleSheet.appendChild(
-        document.createTextNode( "#" + subtitleContainer.id + ' { \n'+
+        document.createTextNode( '.supertext-subtitles { \n'+
           '  font-family: "Helvetica Neue", Helvetica, sans-serif;\n'+
           '  text-align: center;\n'+
           '  text-shadow: 0 0 4px #000;\n'+
           '  color: #FFF;\n'+
+          '}\n'+
+          'supertext-subtitles .supertext-container {\n'+
+          '  position: absolute;\n' +
+          '  bottom: 0px;\n'+
+          '  width: 100%;\n'+
           '}\n'
         ));
       }
@@ -149,17 +152,24 @@
       }
 
       //Check if active and base classes are provided
-      if( options.baseClass === undefined ) {
+      if( !options.baseClass ) {
         options.baseClass = "supertext-container";
       }
-      if( options.activeClass === undefined ) {
-        options.activeClass = "supertext-active";
+      if( !options.inactiveClass ) {
+        options.inactiveClass = "supertext-off";
+      }
+      if( !options.activeClass ) {
+        options.activeClass = "supertext-on";
       }
         
       options._container = document.createElement( "div" );
-      options._container.className = options.baseClass;
-      options._container.innerHTML  = '<div>' + options.text + '</div>';
+      options._container.className = options.baseClass + " " + options.inactiveClass;
 
+      innerDivStyles = "";
+      console.log(options.innerCSS, options.innerClasses);
+      options.innerCSS && ( innerDivStyles += ' style="'+ options.innerCSS + '"');
+      options.innerClasses &&  ( innerDivStyles += ' class="'+options.innerClasses+'"' );
+      options._container.innerHTML  = '<div' + innerDivStyles + '>' + options.text + '</div>';
       options._target && options._target.appendChild( options._container );
 
       //Run the callback
@@ -173,13 +183,16 @@
       //Hide other active elements in the target container first
       var activeElements = options._target.querySelectorAll("."+options.activeClass);
       for(var i=0;i<activeElements.length;i++) {
-        activeElements[i].removeClass(options.activeClass);
+        removeClass(activeElements[i], options.activeClass);
+        addClass(activeElements[i], options.inactiveClass);
       }
+      removeClass(options._container, options.inactiveClass);
       addClass(options._container, options.activeClass);
     },
    
     end: function( event, options ){
       removeClass(options._container, options.activeClass);
+      addClass(options._container, options.inactiveClass);
     },
     _teardown: function( options ) {
       options._target && options._target.removeChild( options._container );

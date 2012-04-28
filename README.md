@@ -5,7 +5,7 @@ Supertext is a text plugin for popcorn.js based on the footnote and subtitle plu
 
 How it works (when a target is specified)
 -------------
-When the plugin is initialized, Supertext creates a div that contains your text and adds it to the target. Between start and end times, Supertext adds an 'active' class to the container.
+When the plugin is initialized, Supertext creates a div that contains your text and adds it to the target. Between start and end times, Supertext adds an 'active' class to the container. Otherwise it as an 'inactive' class.
 
 **Example:**
 ```javascript
@@ -24,41 +24,46 @@ When the plugin is initialized, Supertext creates a div that contains your text 
 **After Plugin Setup**
 ```html
 <div class="mytarget">
-	<div class="supertext-container">This is my cool text</div>
+	<div class="supertext-container supertext-off">This is my cool text</div>
 </div>
 ```
 **Between start and end**
 ```html
 <div class="mytarget">
-	<div class="supertext-container supertext-active">This is my cool text</div>
+	<div class="supertext-container supertext-on">This is my cool text</div>
 </div>
 ```
-The example here uses the default base and active classes, which are `supertext-container` and `supertext-active`, but you can specify them to be whatever you want. The plugin adds the following styles:
+The example here uses the default base, active and inactive classes, which are `supertext-container` and `supertext-on`, but you can specify them to be whatever you want. The plugin adds the following styles to the document head:
 
 ```css
-.supertext-container { 
-  -webkit-transition: visibility .5s .5s, opacity .5s .5s linear;
-  -moz-transition: visibility 0s .5s, opacity .5s linear;
-  transition: visibility 0s .5s, opacity .5s linear;
-  opacity: 0; visibility:hidden; overflow: hidden;
+.supertext-container {
+  overflow: hidden;
 }
-.supertext-container > div {
+ .supertext-on {
+  visibility: visible;
+  opacity: 1;
+  /* Show */
+  -webkit-transition: opacity 0.2s linear 0.2s;
+  -moz-transition: opacity 0.2s linear 0.2s;
+  -o-transition: opacity 0.2s linear 0.2s;
+  transition: opacity 0.2s linear 0.2s;
+}
+ .supertext-off {
+  visibility: hidden;
+  opacity: 0;
+  /* Hide */
+  -webkit-transition: visibility 0s 0.2s, opacity 0.2s linear;
+  -moz-transition: visibility 0s 0.2s, opacity 0.2s linear;
+  -o-transition: visibility 0s 0.2s, opacity 0.2s linear;
+  transition: visibility 0s 0.2s, opacity 0.2s linear;
+}
+ .supertext-off > div {
   margin-top: -10000px;
-  -webkit-transition: margin-top 0s .5s;
-  -moz-transition: margin-top 0s .5s;
-  transition: margin-top .5s .5s;
+  -webkit-transition: margin-top 0s 0.2s;
+  -moz-transition: margin-top 0s 0.2s;
+  -o-transition: margin-top 0s 0.2s;
+  transition: margin-top 0s 0.2s;
 }
-.supertext-active { 
-  -moz-transition: opacity .5s linear;
-  -webkit-transition: opacity .5s .5s linear;
-  transition: opacity .5s linear;
-  transition: opacity .5s linear;
-  opacity: 1; visibility:visible;
-}
-.supertext-active > div {
-  margin-top: 0;
-  -webkit-transition: none}
-
 ```
 
 The default classes use CSS3 transitions to create fade in and out effects by default. You can specify a custom transition time in milliseconds with the `defaultTransition` option.
@@ -67,26 +72,20 @@ Unlike the footnotes/subtitles plugins, Supertext only allows one container per 
 
 How it works (subtitles)
 -------------
-When a target is *not* specified, Supertext adds your text to a subtitle container. The ID of this container is supertext-subtitles-*mediaID*, where mediaID is the ID of your popcorn media element. The following default style is added to the header:
+When a target is *not* specified, Supertext adds your text to a subtitle container. The id of this container is supertext-subtitles-*mediaID* and the class is supertext-subtitles, where mediaID is the ID of your popcorn media element. The following default style is added to the header:
 ```css
-#supertext-subtitles-mediaID { 
+.supertext-subtitles { 
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   text-align: center;
   text-shadow: 0 0 4px #000;
   color: #FFF;
 }
 ```
-Overwriting CSS
+Adding inner CSS
 -------------
-If you wish to overwrite/modify the default styles, you should do so like this:
+If you wish to add styles to the text, you can do with the `innerCSS` or `innerClasses` options. If you are applying classes to subtitles, it is best to write them like this in order for them to have a higher specificity:
 ```css
-#yourtarget .supertext-container { 
- ...
-}
-#yourtarget .supertext-active { 
-  ...
-}
-#supertext-subtitles-mediaID .supertext-container { 
+.supertext-subtitles .yourclassname {
   ...
 }
 ```
@@ -107,13 +106,22 @@ Options
     <td>text</td><td>none</td><td>The text to display</td>
   </tr>
   <tr>
-    <td>defaultTransition</td><td>500</td><td>The transition time for all Supertext instances that use the default supertext-container and supertext-active classes. Note that if this is specified, it will affect ALL Supertext instsances that use the default classes.</td>
+    <td>defaultTransition</td><td>500</td><td>The transition time for all Supertext instances that use the default supertext-container and supertext-on classes. Note that if this is specified, it will affect ALL Supertext instsances that use the default classes.</td>
   </tr>
   <tr>
     <td>baseClass</td><td>supertext-container</td><td>The class to be applied to the div container for the text, which is added to the target element.</td>
   </tr>
   <tr>
-    <td>activeClass</td><td>supertext-active</td><td>The class to be applied to the div container when it is active (between start and end times)</td>
+    <td>activeClass</td><td>supertext-on</td><td>The class to be applied to the div container when it is active (between start and end times)</td>
+  </tr>
+  <tr>
+    <td>inactiveClass</td><td>supertext-off</td><td>The class to be applied to the div container when it is active (between start and end times)</td>
+  </tr>
+  <tr>
+    <td>innerCSS</td><td>none</td><td>Inline CSS to be applied to the inner div.</td>
+  </tr>
+  <tr>
+    <td>innerClasses</td><td>none</td><td>A list of classes to be applied to the inner div separated by spaces.</td>
   </tr>
   <tr>
     <td>target</td><td>none</td><td>The target in which to add the Supertext container. If it is not specified, the container will be added to a subtitle div overlayed on the media element (see above)</td>
@@ -135,6 +143,9 @@ Example with all options:
           defaultTransition: 400, //in milliseconds
           baseClass: 'supertext',
           activeClass: 'active',
+          inactiveClass: '',
+          innerCSS: 'color:red;',
+          innerClasses: 'big meta',
           target: 'myTarget',
           callback: function() {
             console.log("Supertext is playing!");
