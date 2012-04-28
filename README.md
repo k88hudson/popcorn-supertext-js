@@ -45,28 +45,29 @@ The example here uses the default base, active and inactive classes, which are `
   visibility: visible;
   opacity: 1;
   /* Show */
-  -webkit-transition: opacity 0.2s linear 0.2s;
-  -moz-transition: opacity 0.2s linear 0.2s;
-  -o-transition: opacity 0.2s linear 0.2s;
-  transition: opacity 0.2s linear 0.2s;
+  -webkit-transition: opacity .5s linear .5s;
+  -moz-transition: opacity .5s linear .5s;
+  -o-transition: opacity .5s linear .5s;
+  transition: opacity .5s linear .5s;
 }
  .supertext-off {
   visibility: hidden;
   opacity: 0;
   /* Hide */
-  -webkit-transition: visibility 0s 0.2s, opacity 0.2s linear;
-  -moz-transition: visibility 0s 0.2s, opacity 0.2s linear;
-  -o-transition: visibility 0s 0.2s, opacity 0.2s linear;
-  transition: visibility 0s 0.2s, opacity 0.2s linear;
+  -webkit-transition: visibility 0s .5s, opacity .5s linear;
+  -moz-transition: visibility 0s .5s, opacity .5s linear;
+  -o-transition: visibility 0s .5s, opacity .5s linear;
+  transition: visibility 0s .5s, opacity .5s linear;
 }
  .supertext-off > div {
   margin-top: -10000px;
-  -webkit-transition: margin-top 0s 0.2s;
-  -moz-transition: margin-top 0s 0.2s;
-  -o-transition: margin-top 0s 0.2s;
-  transition: margin-top 0s 0.2s;
+  -webkit-transition: margin-top 0s .5s;
+  -moz-transition: margin-top 0s .5s;
+  -o-transition: margin-top 0s .5s;
+  transition: margin-top 0s .5s;
 }
 ```
+The technique is a modified form of a solution presented by [Florent Verschelde](http://fvsch.com/code/transition-fade/test5.html).
 
 The default classes use CSS3 transitions to create fade in and out effects by default. You can specify a custom transition time in milliseconds with the `defaultTransition` option.
 
