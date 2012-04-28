@@ -71,7 +71,6 @@
       if( options.defaultTransition && styleSheet ) {
         styleSheet.parentNode.removeChild( styleSheet );
         styleSheet = undefined;
-        console.log('stylesheet', styleSheet);
       }
 
       //Create the stylesheet if it is not set
@@ -166,7 +165,6 @@
       options._container.className = options.baseClass + " " + options.inactiveClass;
 
       innerDivStyles = "";
-      console.log(options.innerCSS, options.innerClasses);
       options.innerCSS && ( innerDivStyles += ' style="'+ options.innerCSS + '"');
       options.innerClasses &&  ( innerDivStyles += ' class="'+options.innerClasses+'"' );
       options._container.innerHTML  = '<div' + innerDivStyles + '>' + options.text + '</div>';
