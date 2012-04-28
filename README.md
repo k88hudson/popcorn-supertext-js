@@ -1,7 +1,9 @@
 popcorn.supertext.js
 ====================
 
-Supertext is a text plugin for popcorn.js based on the footnote and subtitle plugins. Instead of showing/hiding divs with `style.display`, it shows/hides text by adding and removing an "active" class.
+Supertext is a text plugin for popcorn.js. It can be used to create subtitles, or add text to any target element on the page. There is a subtle fade in/out transition by default, but Supertext supports custom transition times, container classes, active/inactive states, and styles for inner text.
+
+Supertext is based on the footnote and subtitle plugins, but instead of showing/hiding divs with `style.display`, it handles this with clases and css3 transitions.
 
 How it works (when a target is specified)
 -------------
